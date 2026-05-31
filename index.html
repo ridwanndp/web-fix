@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoolerBox Rent Indonesia</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+:root{
+--primary:#2563eb;
+--dark:#0f172a;
+--gold:#f59e0b;
+--light:#f8fafc;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:var(--light);
+color:#1e293b;
+}
+
+header{
+position:sticky;
+top:0;
+background:white;
+padding:18px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 2px 10px rgba(0,0,0,.08);
+z-index:999;
+}
+
+.logo{
+font-size:24px;
+font-weight:700;
+color:var(--primary);
+}
+
+.hero{
+height:80vh;
+background:linear-gradient(135deg,#0f172a,#2563eb);
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+color:white;
+padding:20px;
+}
+
+.hero h1{
+font-size:55px;
+margin-bottom:15px;
+}
+
+.hero p{
+max-width:700px;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:70px 20px;
+}
+
+.title{
+text-align:center;
+font-size:35px;
+margin-bottom:40px;
+}
+
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:25px;
+}
+
+.card{
+background:white;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 8px 25px rgba(0,0,0,.08);
+transition:.3s;
+border-top: 5px solid var(--primary); /* Menambah aksen karena foto dihapus */
+}
+
+.card:hover{
+transform:translateY(-8px);
+}
+
+.card-body{
+padding:30px 20px;
+text-align: center;
+}
+
+.price{
+font-size:24px;
+font-weight:700;
+color:#16a34a;
+margin:15px 0;
+}
+
+.btn{
+width:100%;
+padding:12px;
+border:none;
+background:var(--primary);
+color:white;
+border-radius:10px;
+cursor:pointer;
+font-weight:600;
+}
+
+.cart-btn{
+position:fixed;
+bottom:25px;
+right:25px;
+background:var(--primary);
+color:white;
+padding:15px 20px;
+border-radius:50px;
+cursor:pointer;
+font-weight:600;
+z-index:999;
+}
+
+.sidebar{
+position:fixed;
+top:0;
+right:-420px;
+width:400px;
+height:100%;
+background:white;
+padding:20px;
+overflow:auto;
+transition:.4s;
+box-shadow:-10px 0 25px rgba(0,0,0,.15);
+z-index:1000;
+}
+
+.sidebar.active{
+right:0;
+}
+
+.close-btn{
+background:#ef4444;
+margin-bottom:15px;
+}
+
+.item{
+padding:12px;
+border-bottom:1px solid #eee;
+margin-bottom:10px;
+}
+
+input,textarea{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:1px solid #ddd;
+border-radius:10px;
+}
+
+.history-card{
+background:white;
+padding:20px;
+margin-bottom:15px;
+border-left:5px solid var(--primary);
+border-radius:12px;
+box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+footer{
+background:#0f172a;
+color:white;
+text-align:center;
+padding:35px;
+margin-top:50px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">CoolerBox Rent Indonesia</div>
+</header>
+
+<section class="hero">
+<h1>CoolerBox Rent Indonesia</h1>
+<p>Penyewaan Cooler Box Profesional untuk Event, Catering, UMKM dan Kebutuhan Bisnis.</p>
+</section>
+
+<section class="container">
+
+<h2 class="title">Daftar Produk</h2>
+
+<div class="products">
+
+<div class="card">
+<div class="card-body">
+<h3>Cooler Box 22 Liter</h3>
+<div class="price">Rp 65.000</div>
+<button class="btn" onclick="addCart('Cooler Box 22 Liter',65000)">Tambah</button>
+</div>
+</div>
+
+<div class="card">
+<div class="card-body">
+<h3>Cooler Box 30 Liter</h3>
+<div class="price">Rp 115.000</div>
+<button class="btn" onclick="addCart('Cooler Box 30 Liter',115000)">Tambah</button>
+</div>
+</div>
+
+<div class="card">
+<div class="card-body">
+<h3>Cooler Box 35 Liter</h3>
+<div class="price">Rp 165.000</div>
+<button class="btn" onclick="addCart('Cooler Box 35 Liter',165000)">Tambah</button>
+</div>
+</div>
+
+</div>
+
+</section>
+
+<section class="container">
+<h2 class="title">Riwayat Pemesanan</h2>
+<div id="history"></div>
+</section>
+
+<div class="cart-btn" onclick="toggleCart()">
+🛒 <span id="count">0</span>
+</div>
+
+<div class="sidebar" id="cart">
+
+<button class="btn close-btn" onclick="toggleCart()">
+✕ Tutup Keranjang
+</button>
+
+<h2>Keranjang</h2>
+
+<div id="cartItems"></div>
+
+<h3 id="total">Total : Rp 0</h3>
+
+<br>
+
+<input type="text" id="nama" placeholder="Nama Lengkap">
+<input type="email" id="email" placeholder="Email">
+<input type="text" id="hp" placeholder="Nomor HP">
+<textarea id="alamat" placeholder="Alamat Lengkap"></textarea>
+
+<label>Upload Bukti Transfer</label>
+<input type="file" id="bukti">
+
+<br><br>
+
+<button class="btn" onclick="checkout()">
+Selesaikan Pemesanan
+</button>
+
+</div>
+
+<footer>
+<h2>CoolerBox Rent Indonesia</h2>
+<p>Rental Cooler Box Profesional</p>
+</footer>
+
+<script>
+
+let cart=[];
+
+function addCart(nama,harga){
+
+cart.push({
+nama:nama,
+harga:harga
+});
+
+renderCart();
+
+}
+
+function renderCart(){
+
+let html='';
+let total=0;
+
+cart.forEach((item,index)=>{
+
+html+=`
+<div class="item">
+<b>${item.nama}</b><br>
+Rp ${item.harga.toLocaleString('id-ID')}
+<br><br>
+<button onclick="removeItem(${index})">Hapus</button>
+</div>
+`;
+
+total+=item.harga;
+
+});
+
+document.getElementById('cartItems').innerHTML=html;
+document.getElementById('count').innerText=cart.length;
+document.getElementById('total').innerText='Total : Rp '+total.toLocaleString('id-ID');
+
+}
+
+function removeItem(index){
+
+cart.splice(index,1);
+renderCart();
+
+}
+
+function toggleCart(){
+
+document.getElementById('cart').classList.toggle('active');
+
+}
+
+function checkout(){
+
+let nama=document.getElementById('nama').value;
+
+if(nama==='' || cart.length===0){
+
+Swal.fire({
+icon:'warning',
+title:'Data Belum Lengkap',
+text:'Lengkapi data dan pilih produk terlebih dahulu'
+});
+
+return;
+
+}
+
+let total=cart.reduce((a,b)=>a+b.harga,0);
+
+let history=
+JSON.parse(localStorage.getItem('cooler_history')) || [];
+
+history.unshift({
+
+tanggal:new Date().toLocaleString('id-ID'),
+nama:nama,
+total:total,
+produk:[...cart]
+
+});
+
+localStorage.setItem(
+'cooler_history',
+JSON.stringify(history)
+);
+
+cart=[];
+
+renderCart();
+
+showHistory();
+
+document.getElementById('nama').value='';
+document.getElementById('email').value='';
+document.getElementById('hp').value='';
+document.getElementById('alamat').value='';
+
+Swal.fire({
+icon:'success',
+title:'🎉 Pemesanan Berhasil',
+html:`
+<p><b>${nama}</b></p>
+<p>Total Pesanan</p>
+<h2>Rp ${total.toLocaleString('id-ID')}</h2>
+<p>Pesanan telah tersimpan.</p>
+`,
+confirmButtonColor:'#2563eb'
+});
+
+}
+
+function showHistory(){
+
+let data=
+JSON.parse(localStorage.getItem('cooler_history')) || [];
+
+let html='';
+
+data.forEach(item=>{
+
+html+=`
+<div class="history-card">
+
+<h3>${item.nama}</h3>
+
+<p>${item.tanggal}</p>
+
+<p>Total : Rp ${item.total.toLocaleString('id-ID')}</p>
+
+<p>${item.produk.map(x=>x.nama).join(', ')}</p>
+
+</div>
+`;
+
+});
+
+document.getElementById('history').innerHTML=
+html || 'Belum ada riwayat pemesanan';
+
+}
+
+showHistory();
+
+</script>
+
+</body>
+</html>
